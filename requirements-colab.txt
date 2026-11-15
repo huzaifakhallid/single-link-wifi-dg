@@ -1,0 +1,4 @@
+# Colab GPU runtime: torch (CUDA build), numpy, scipy, pandas, scikit-learn and matplotlib are provided by the
+# runtime image and are deliberately NOT reinstalled (a pinned CPU wheel would replace the CUDA build).
+# The exact versions in use are printed and stored by the notebook (section 0) and in every metrics.json.
+# csiread is not needed on Colab: raw decoding happens locally, only the feature cache is uploaded.

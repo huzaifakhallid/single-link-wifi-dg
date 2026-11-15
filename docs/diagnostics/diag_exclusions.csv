@@ -1,0 +1,2 @@
+trial_id,user,gesture,location,orientation,rep,file_bytes,valid,exclusion_reason
+user16-5-4-4-4-r1,16,5,4,4,4,98900,False,short_duration: 0.459s < 0.5s

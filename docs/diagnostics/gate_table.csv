@@ -1,0 +1,23 @@
+fit,hampel_mode,channels,head_scale,epochs,lr,optimizer_steps,train_acc,heldout_acc,n_train,n_heldout,maps_file
+fused__ratio__diff__bp_pca_log1p__ep45,ratio,phase:diff + doppler:bp_pca_log1p,10.0,45,0.001,1485,0.8634,0.8093,2159,540,results_diag/maps_before_after.png
+single__ratio__phase-diff,ratio,phase:diff,10.0,15,0.001,495,0.6748,0.6796,2159,540,results_diag/maps_before_after.png
+single__ratio__doppler-bp_pca_log1p,ratio,doppler:bp_pca_log1p,10.0,15,0.001,495,0.66,0.6556,2159,540,results_diag/maps_before_after.png
+single__ratio__doppler-bp_pca_db,ratio,doppler:bp_pca_db,10.0,15,0.001,495,0.6373,0.6389,2159,540,results_diag/maps_before_after.png
+single__ratio__doppler-bp_avg_db,ratio,doppler:bp_avg_db,10.0,15,0.001,495,0.6258,0.6037,2159,540,results_diag/maps_before_after.png
+single__ratio__doppler-mean_avg_db,ratio,doppler:mean_avg_db,10.0,15,0.001,495,0.6244,0.5926,2159,540,results_diag/maps_before_after.png
+single__ratio__doppler-bp_avg_log1p,ratio,doppler:bp_avg_log1p,10.0,15,0.001,495,0.6281,0.587,2159,540,results_diag/maps_before_after.png
+single__ratio__doppler-mean_avg_log1p,ratio,doppler:mean_avg_log1p,10.0,15,0.001,495,0.5262,0.5241,2159,540,results_diag/maps_before_after.png
+single__ratio__phase-unwrap_hp,ratio,phase:unwrap_hp,10.0,15,0.001,495,0.5252,0.5111,2159,540,results_diag/maps_before_after.png
+single__ratio__phase-rel,ratio,phase:rel,10.0,15,0.001,495,0.5132,0.4667,2159,540,results_diag/maps_before_after.png
+single__ratio__phase-unwrap,ratio,phase:unwrap,10.0,15,0.001,495,0.5178,0.4667,2159,540,results_diag/maps_before_after.png
+single__antenna_complex__doppler-bp_pca_db,antenna_complex,doppler:bp_pca_db,10.0,15,0.001,495,0.4701,0.4648,2159,540,results_diag/maps_before_after.png
+single__antenna_complex__doppler-bp_avg_db,antenna_complex,doppler:bp_avg_db,10.0,15,0.001,495,0.3942,0.4185,2159,540,results_diag/maps_before_after.png
+single__antenna_complex__doppler-bp_pca_log1p,antenna_complex,doppler:bp_pca_log1p,10.0,15,0.001,495,0.434,0.4,2159,540,results_diag/maps_before_after.png
+fused__antenna_complex__unwrap__mean_avg_log1p__ep45,antenna_complex,phase:unwrap + doppler:mean_avg_log1p,10.0,45,0.001,1485,0.4738,0.3889,2159,540,results_diag/maps_before_after.png
+single__antenna_complex__doppler-bp_avg_log1p,antenna_complex,doppler:bp_avg_log1p,10.0,15,0.001,495,0.3993,0.3833,2159,540,results_diag/maps_before_after.png
+single__antenna_complex__phase-diff,antenna_complex,phase:diff,10.0,15,0.001,495,0.371,0.3593,2159,540,results_diag/maps_before_after.png
+single__antenna_complex__doppler-mean_avg_db,antenna_complex,doppler:mean_avg_db,10.0,15,0.001,495,0.3562,0.3222,2159,540,results_diag/maps_before_after.png
+single__antenna_complex__phase-unwrap_hp,antenna_complex,phase:unwrap_hp,10.0,15,0.001,495,0.3252,0.3185,2159,540,results_diag/maps_before_after.png
+single__antenna_complex__phase-unwrap,antenna_complex,phase:unwrap,10.0,15,0.001,495,0.2673,0.2444,2159,540,results_diag/maps_before_after.png
+single__antenna_complex__doppler-mean_avg_log1p,antenna_complex,doppler:mean_avg_log1p,10.0,15,0.001,495,0.2835,0.237,2159,540,results_diag/maps_before_after.png
+single__antenna_complex__phase-rel,antenna_complex,phase:rel,10.0,15,0.001,495,0.2811,0.2315,2159,540,results_diag/maps_before_after.png

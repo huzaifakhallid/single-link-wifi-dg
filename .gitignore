@@ -1,0 +1,17 @@
+# data and large caches (never in git)
+dataset/
+cache/*.npy
+cache/*.npz
+# cache/manifest.csv and cache/splits.csv ARE tracked; per-user intermediates are not
+cache/user*_meta.csv
+# run outputs
+results*/
+*.pt
+# documents with personal identifiers
+docs/*.pdf
+__pycache__/
+.ipynb_checkpoints/
+
+#AI files
+*.ckpt
+decisions.md

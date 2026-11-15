@@ -1,0 +1,104 @@
+{
+  "dataset": "Widar3.0 (Tsinghua mirror), session 20181130 = Room 1",
+  "zips": [
+    {
+      "file": "20181130_user12_13_14.zip",
+      "bytes": 6565582712,
+      "sha256": "fc47cb4d946265ce219bfff60cc2798a50dd36afda2b7894958eb0728cc1352a",
+      "n_dat_members": 20250,
+      "users": [
+        12,
+        13,
+        14
+      ],
+      "gestures": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "receivers": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "n_r1_gesture1to6_members": 2250,
+      "extracted": "user12:750,user13:750,user14:750",
+      "integrity": "per-member CRC-32 verified by zipfile during extraction"
+    },
+    {
+      "file": "20181130_user15_16_17.zip",
+      "bytes": 7039554854,
+      "sha256": "4c753d0aed8505cee6daf5440f78f7e92286836b634ed9b0cdf79d1cfac968f7",
+      "n_dat_members": 20250,
+      "users": [
+        15,
+        16,
+        17
+      ],
+      "gestures": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "receivers": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "n_r1_gesture1to6_members": 2250,
+      "extracted": "user15:750,user16:750,user17:750",
+      "integrity": "per-member CRC-32 verified by zipfile during extraction"
+    },
+    {
+      "file": "20181130_user5_10_11.zip",
+      "bytes": 6535219533,
+      "sha256": "82c8225aeec37258598e22c927f6c4b8a40211013fa2b741c926f6ef162be2f0",
+      "n_dat_members": 20250,
+      "users": [
+        5,
+        10,
+        11
+      ],
+      "gestures": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "receivers": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "n_r1_gesture1to6_members": 2250,
+      "extracted": "user5:750,user10:750,user11:750",
+      "integrity": "per-member CRC-32 verified by zipfile during extraction"
+    }
+  ]
+}
