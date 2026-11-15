@@ -209,6 +209,8 @@ def maps(user: int = 5) -> None:
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     from train import GESTURE_NAMES
+    plt.rcParams.update({"font.family": "serif", "font.serif": ["Times New Roman", "DejaVu Serif"], "text.color": "black",
+                         "axes.labelcolor": "black", "xtick.color": "black", "ytick.color": "black"})
     meta = pd.read_csv(OUT / "diag_trials.csv")
     cols = [(PHASE2[0], PHASE2[1]), (pp.LOCKED["hampel_mode"], f"phase:{pp.LOCKED['phase_variant']}"),
             (PHASE2[0], PHASE2[2]), (pp.LOCKED["hampel_mode"], f"doppler:{pp.LOCKED['doppler_variant']}")]

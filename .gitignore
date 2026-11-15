@@ -17,3 +17,6 @@ __pycache__/
 decisions.md
 # exported result archives
 single_link_dg_results*.zip
+
+# third-party papers (copyright of their publishers)
+base papers/

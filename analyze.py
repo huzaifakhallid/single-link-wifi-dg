@@ -50,10 +50,19 @@ LITERATURE = [
     dict(system="Wi-SFDAGR (IEEE IoT-J'25)", receivers="multi-device input", input="CSI-ratio phase heatmaps",
          target_data="unlabelled target data", in_domain="-", cross_orientation="97.17",
          fairness="Source-free adaptation on unlabelled target samples; not strict domain generalization."),
+    dict(system="GesFi (arXiv 2601.03825, 2026), 1 antenna pair, Table 3", receivers="1 Tx-Rx pair, 2 antennas chosen by variance",
+         input="CSI-ratio phase + DFS images", target_data="none", in_domain="97.29", cross_orientation="86.66",
+         fairness="Base paper. Trains on 4 orientations; ImageNet-pretrained ResNet18; no validation domain described."),
+    dict(system="WiSR (IEEE TMC'23), 1 antenna pair, as reported in GesFi Table 3", receivers="1 Tx-Rx pair",
+         input="CSI-based", target_data="none", in_domain="-", cross_orientation="88.80",
+         fairness="Secondary citation through GesFi; protocol as in GesFi (4 training orientations)."),
+    dict(system="WiZeCSi (IEEE Access 2026), 1 link at test, Tables 3 and 6", receivers="6 receivers in training, 1 at test",
+         input="CSI-ratio amplitude + phase, 6 antenna-pair ratios", target_data="none", in_domain="98.32", cross_orientation="96.57",
+         fairness="Base paper. Trained on all six receivers (link mixing); 6 users; AlexNet-style CNN; 4 training orientations."),
 ]
 
 # dataviz reference palette (light surface)
-INK, INK2, MUTED, GRID, AXIS, SURFACE = "#0b0b0b", "#52514e", "#898781", "#e1e0d9", "#c3c2b7", "#fcfcfb"
+INK, INK2, MUTED, GRID, AXIS, SURFACE = "#000000", "#000000", "#898781", "#e1e0d9", "#8a8a8a", "#ffffff"
 CAT = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300"]
 ROLE_COLOR = {"proposed": CAT[0], "matched baseline": CAT[1], "external DG baseline": CAT[2], "ablation arm": MUTED}
 BLUES = ["#fcfcfb", "#cde2fb", "#9ec5f4", "#6da7ec", "#3987e5", "#256abf", "#184f95", "#0d366b"]
@@ -444,7 +453,9 @@ def _plt():
                          "axes.edgecolor": AXIS, "axes.labelcolor": INK2, "xtick.color": INK2, "ytick.color": INK2,
                          "text.color": INK, "axes.grid": True, "grid.color": GRID, "grid.linewidth": 0.6,
                          "axes.spines.top": False, "axes.spines.right": False, "font.size": 9, "axes.titlesize": 10,
-                         "axes.titleweight": "bold", "legend.frameon": False, "axes.axisbelow": True})
+                         "axes.titleweight": "bold", "legend.frameon": False, "axes.axisbelow": True,
+                         "font.family": "serif", "font.serif": ["Times New Roman", "DejaVu Serif"],
+                         "mathtext.fontset": "stix"})
     return plt
 
 

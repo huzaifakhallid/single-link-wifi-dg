@@ -15,12 +15,42 @@ from pathlib import Path
 
 import pandas as pd
 from docx import Document
-from docx.enum.section import WD_ORIENT
 from docx.enum.text import WD_ALIGN_PARAGRAPH
-from docx.shared import Cm, Pt
+from docx.oxml import OxmlElement
+from docx.oxml.ns import qn
+from docx.shared import Cm, Pt, RGBColor
 
-TITLE = "Class-discriminative single-link WiFi domain generalization for CSI gesture recognition"
-AUTHORS = "23I-2621, 23I-2508 | Computer Networks research project, FAST-NUCES"
+TITLE = "Class-Discriminative Single-Link WiFi Domain Generalization for CSI Gesture Recognition"
+SUBTITLE = "Research Implementation and Experimental Evaluation"
+COURSE = "Computer Networks Research Project, FAST-NUCES"
+AUTHORS = [("Muhammad Huzaifa Khalid", "23I-2508"), ("Abdullah Asim", "23I-2621")]
+REPORT_DATE = "15 November 2026"
+FONT = "Times New Roman"
+BLACK = RGBColor(0, 0, 0)
+
+# References cited in the text as [n]. Bibliographic details are taken from the papers themselves or from the reference
+# lists of the base papers and of the Phase-2 review.
+REFS = [
+    'X. Zhang, H. Yan, J. Huang, B. Liu, Y. Feng, J. Liu, M. Li, F. Zhang and Z. Liu, "Beyond Physical Labels: Redefining Domains for '
+    'Robust WiFi-based Gesture Recognition," arXiv:2601.03825v2, January 2026.',
+    'T. Dai and E. Khorov, "WiZeCSi: Toward Wi-Fi-Based Single-Link Zero-Effort Cross-Domain Gesture Recognition," IEEE Access, '
+    'vol. 14, pp. 63579-63594, 2026, doi: 10.1109/ACCESS.2026.3677814.',
+    'M. Koo and J. Park, "Dual-Axis Transformer-GNN Framework for Touchless Finger Location Sensing by Using Wi-Fi Channel State '
+    'Information," Electronics, vol. 15, art. 565, 2026, doi: 10.3390/electronics15030565.',
+    'Y. Zhang, Y. Zheng, K. Qian, G. Zhang, Y. Liu, C. Wu and Z. Yang, "Widar3.0: Zero-effort cross-domain gesture recognition with Wi-Fi," '
+    'IEEE Trans. Pattern Anal. Mach. Intell., vol. 44, no. 11, pp. 8671-8688, 2022.',
+    'S. Liu, Z. Chen, M. Wu, C. Liu and L. Chen, "WiSR: Wireless Domain Generalization Based on Style Randomization," IEEE Trans. '
+    'Mobile Comput., 2023.',
+    'F.-Q. Cui, Y.-T. Guo, T. Zheng and J. Huang, "Generalizing WiFi Gesture Recognition via Large-Model-Aware Semantic Distillation and '
+    'Alignment," IEEE ICPADS 2025; arXiv:2510.13390.',
+    'R. Zhang, S. Tang, H. Yan, X. Zhang and J. Guo, "Wi-CBR: Salient-aware Adaptive WiFi Sensing for Cross-domain Behavior '
+    'Recognition," Proc. AAAI, vol. 40, no. 2, pp. 1552-1560, 2026.',
+    'H. Yan, X. Zhang, J. Huang, Y. Feng, M. Li, A. Wang, W. Ou, H. Wang and Z. Liu, "Wi-SFDAGR: WiFi-Based Cross-Domain Gesture '
+    'Recognition via Source-Free Domain Adaptation," IEEE Internet Things J., vol. 12, no. 13, pp. 24159-24173, 2025.',
+    'B. Sun and K. Saenko, "Deep CORAL: Correlation alignment for deep domain adaptation," ECCV Workshops, 2016.',
+    'Y. Ganin and V. Lempitsky, "Unsupervised domain adaptation by backpropagation," Proc. ICML, pp. 1180-1189, 2015.',
+    'H. Zhang, M. Cisse, Y. N. Dauphin and D. Lopez-Paz, "mixup: Beyond empirical risk minimization," Proc. ICLR, 2018.',
+]
 
 
 class Report:
@@ -30,25 +60,90 @@ class Report:
         self.fm = json.load(open(cache / "features_meta.json"))
         self.gate = pd.read_csv(diag / "gate_table.csv")
         self.doc = Document()
-        st = self.doc.styles["Normal"]
-        st.font.name, st.font.size = "Calibri", Pt(10)
+        self._styles()
         for s in self.doc.sections:
-            s.left_margin = s.right_margin = Cm(1.9)
-            s.top_margin = s.bottom_margin = Cm(1.8)
+            s.left_margin = s.right_margin = Cm(2.2)
+            s.top_margin = s.bottom_margin = Cm(2.2)
+        self._page_numbers()
+        cp = self.doc.core_properties
+        cp.title, cp.author = TITLE, "; ".join(n for n, _ in AUTHORS)
         self.nfig = self.ntab = 0
         self.deferred = []          # items moved to the appendix to keep the main body short
+
+    # ---- formatting
+    @staticmethod
+    def _font(target, size=None, bold=None):
+        """Times New Roman for every script, black, optional size and weight; works on styles and runs."""
+        target.font.name = FONT
+        target.font.color.rgb = BLACK
+        if size is not None:
+            target.font.size = Pt(size)
+        if bold is not None:
+            target.font.bold = bold
+        rpr = target.element.get_or_add_rPr()
+        rfonts = rpr.find(qn("w:rFonts"))
+        if rfonts is None:
+            rfonts = OxmlElement("w:rFonts")
+            rpr.insert(0, rfonts)
+        for a in ("w:ascii", "w:hAnsi", "w:cs", "w:eastAsia"):
+            rfonts.set(qn(a), FONT)
+        for a in ("w:asciiTheme", "w:hAnsiTheme", "w:cstheme", "w:eastAsiaTheme"):
+            if rfonts.get(qn(a)) is not None:
+                del rfonts.attrib[qn(a)]
+
+    def _styles(self):
+        st = self.doc.styles
+        self._font(st["Normal"], 11)
+        st["Normal"].paragraph_format.space_after = Pt(6)
+        st["Normal"].paragraph_format.line_spacing = 1.15
+        for name, size in (("Title", 17), ("Heading 1", 14), ("Heading 2", 12), ("Heading 3", 11)):
+            self._font(st[name], size, bold=True)
+            st[name].font.italic = False
+            st[name].paragraph_format.space_before = Pt(12 if name == "Heading 1" else 8)
+            st[name].paragraph_format.space_after = Pt(4)
+        self._font(st["List Bullet"], 11)
+        self._font(st["List Number"], 11)
+
+    def _page_numbers(self):
+        para = self.doc.sections[0].footer.paragraphs[0]
+        para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        run = para.add_run()
+        for tag, text in (("begin", None), (None, "PAGE"), ("end", None)):
+            if tag:
+                el = OxmlElement("w:fldChar")
+                el.set(qn("w:fldCharType"), tag)
+            else:
+                el = OxmlElement("w:instrText")
+                el.set(qn("xml:space"), "preserve")
+                el.text = text
+            run._r.append(el)
+        self._font(run, 10)
+
+    def finalize(self):
+        """Force every run (body, tables, footer) to Times New Roman in black."""
+        paras = list(self.doc.paragraphs)
+        for t in self.doc.tables:
+            for row in t.rows:
+                for cell in row.cells:
+                    paras.extend(cell.paragraphs)
+        for sec in self.doc.sections:
+            paras.extend(sec.footer.paragraphs)
+        for para in paras:
+            for run in para.runs:
+                self._font(run)
 
     # ---- primitives
     def h(self, text, level=1):
         self.doc.add_heading(text, level=level)
 
-    def p(self, text, bold=False, italic=False, size=None):
+    def p(self, text, bold=False, italic=False, size=None, justify=True):
         para = self.doc.add_paragraph()
         run = para.add_run(text)
         run.bold, run.italic = bold, italic
         if size:
             run.font.size = Pt(size)
-        para.paragraph_format.space_after = Pt(4)
+        if justify:
+            para.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
         return para
 
     def bullets(self, items):
@@ -66,10 +161,12 @@ class Report:
             self.deferred.append(lambda: self.table(df, caption, font, widths))
             return
         self.ntab += 1
-        cap = self.p(f"Table {self.ntab}. {caption}", bold=True, size=8.5)
+        cap = self.p(f"Table {self.ntab}. {caption}", bold=True, size=10, justify=False)
         cap.paragraph_format.keep_with_next = True
+        cap.paragraph_format.space_after = Pt(3)
         t = self.doc.add_table(rows=1, cols=len(df.columns))
-        t.style = "Light Grid Accent 1"
+        t.style = "Table Grid"
+        t.alignment = 1
         for j, c in enumerate(df.columns):
             cell = t.rows[0].cells[j]
             cell.text = str(c)
@@ -85,6 +182,11 @@ class Report:
             for row in t.rows:
                 for j, w in enumerate(widths):
                     row.cells[j].width = Cm(w)
+        for row in t.rows:
+            for cell in row.cells:
+                for para in cell.paragraphs:
+                    para.paragraph_format.space_after = Pt(0)
+                    para.paragraph_format.line_spacing = 1.0
         self.doc.add_paragraph().paragraph_format.space_after = Pt(2)
 
     def figure(self, path, caption, width=17.0, appendix=False):
@@ -97,7 +199,8 @@ class Report:
         self.nfig += 1
         self.doc.add_picture(str(path), width=Cm(width))
         self.doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
-        self.p(f"Figure {self.nfig}. {caption}", italic=True, size=8.5).alignment = WD_ALIGN_PARAGRAPH.CENTER
+        self.doc.paragraphs[-1].paragraph_format.keep_with_next = True
+        self.p(f"Figure {self.nfig}. {caption}", italic=True, size=10, justify=False).alignment = WD_ALIGN_PARAGRAPH.CENTER
 
     def fig(self, name, caption, width=17.0, appendix=False):
         self.figure(self.res / "figures" / f"{name}.png", caption, width, appendix)
@@ -127,9 +230,15 @@ class Report:
     def build(self):
         S, fm = self.S, self.fm
         doc = self.doc
-        t = doc.add_heading(TITLE, level=0)
-        self.p("Phase 3: Research Implementation and Experimental Evaluation", bold=True, size=12)
-        self.p(AUTHORS, size=9)
+        t = doc.add_paragraph(TITLE, style="Title")
+        t.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        for text, size, bold in ((f"Phase 3: {SUBTITLE}", 13, True), (COURSE, 11, False)):
+            self.p(text, bold=bold, size=size, justify=False).alignment = WD_ALIGN_PARAGRAPH.CENTER
+        for name, roll in AUTHORS:
+            a = self.p(f"{name} ({roll})", size=12, justify=False)
+            a.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            a.paragraph_format.space_after = Pt(0)
+        self.p(REPORT_DATE, size=11, justify=False).alignment = WD_ALIGN_PARAGRAPH.CENTER
 
         gate = self.gate
         fused = gate[gate.channels.str.contains(r"\+")]
@@ -165,7 +274,9 @@ class Report:
             + ("C5 therefore meets the directional criterion declared in Phase 2 (higher accuracy and macro-F1 than C1 with clap/slide error not increased). "
                if met else
                "C5 therefore does not meet every part of the directional criterion declared in Phase 2 (higher accuracy and macro-F1 than C1 with clap/slide error not increased). ")
-            + "Bootstrap intervals over the nine participants are reported as exploratory. All numbers in this report are generated from saved run files.")
+            + "Bootstrap intervals over the nine participants are reported as exploratory. The results are compared with three base papers on "
+              "single-link and cross-domain WiFi gesture recognition, whose protocols differ from ours. All numbers in this report are generated "
+              "from saved run files.")
 
         # ---------------- 1 implementation + refinements
         self.h("1. Implementation of the proposed methodology and refinements since Phase 2", 1)
@@ -211,7 +322,7 @@ class Report:
         # ---------------- 2 dataset
         self.h("2. Dataset, preprocessing and experimental setup", 1)
         self.h("2.1 Dataset and audit", 2)
-        self.p("Secondary data: Widar3.0 raw CSI, session 20181130 (Room 1, classroom), Intel 5300, one transmit and three receive antennas, 30 subcarriers, "
+        self.p("Secondary data: Widar3.0 raw CSI [4], session 20181130 (Room 1, classroom), Intel 5300, one transmit and three receive antennas, 30 subcarriers, "
                "about 1,000 packets/s at 5.825 GHz. Only receiver r1 and gestures 1-6 (push&pull, sweep, clap, slide, draw-O, draw-zigzag) are used; "
                "files of the other five receivers, gestures 7-9, BVP and the dataset's DFS files (which fuse six receivers) are never read. "
                "Archives were verified by per-member CRC-32 during extraction and their SHA-256 digests are stored in cache/data_provenance.json.")
@@ -250,8 +361,8 @@ class Report:
         self.h("3. Baseline evaluation and main results", 1)
         self.p("Controlled arms: C0 phase only; C1 phase/Doppler fusion (main matched baseline); C2 = C1 + curriculum; C3 = C1 + class consistency; "
                "C4 = consistency + fixed-level augmentation; C5 = consistency + curriculum (proposed). External DG baselines on the same fused encoder "
-               "with a linear head, the same optimiser, epochs and source-validation checkpoint selection: B1 ERM, B2 Deep CORAL, B3 DANN (domains = "
-               "training orientations), B4 Mixup (alpha 0.2). Metrics: accuracy, macro-F1, worst-class F1, clap/slide pair error (mean of "
+               "with a linear head, the same optimiser, epochs and source-validation checkpoint selection: B1 ERM, B2 Deep CORAL [9], B3 DANN [10] (domains = "
+               "training orientations), B4 Mixup [11] (alpha 0.2). Metrics: accuracy, macro-F1, worst-class F1, clap/slide pair error (mean of "
                "P(slide|clap) and P(clap|slide)), in-domain minus target gap, and cost.")
         main = self.csv("T2_main_results")
         if main is not None:
@@ -278,12 +389,92 @@ class Report:
 
         # ---------------- 5 literature
         self.h("5. Comparison with existing research", 1)
-        self.p("The table places the measured single-link results next to numbers reported by related papers on Widar3.0. The protocols differ in "
-               "the number of receivers, the input representation, the split, the model size and whether target data are used, so the published rows "
-               "are context and are not ranked against ours. The closest setting is GLSDA's CSI-ratio branch at one receiver location, which still "
-               "uses a different split (train on one location/orientation, test on the others) and a large-model semantic teacher.")
+        self.p("This section compares the study with three base papers that address single-link or cross-domain WiFi gesture recognition: "
+               "GesFi [1], WiZeCSi [2] and the dual-axis Transformer-GNN framework of Koo and Park [3], and then places the measured results "
+               "next to other published Widar3.0 numbers [4]-[8]. All published values are quoted as reported by their authors; none of them "
+               "was re-run here, and none uses the same protocol as this study, so they are context and are not ranked against our rows.")
+        self.h("5.1 Setting of the three base papers", 2)
+        bp = pd.DataFrame([
+            ["Publication", "arXiv preprint 2601.03825v2 (2026), ACM IMWUT format, no DOI assigned",
+             "IEEE Access, vol. 14, 2026", "Electronics (MDPI), vol. 15, art. 565, 2026", "Course project, not peer reviewed"],
+            ["Data", "Widar3.0 (Room 1 for cross-orientation), ARIL, XRF55, own real-world data",
+             "Widar3.0, six gestures, six users of Room 1 (4,500 trials); SignFi",
+             "Own data: 4 finger-location classes, 6 participants, 10 days", "Widar3.0 Room 1, six gestures, nine users, 6,747 trials"],
+            ["Links in training", "6 Tx-Rx pairs, or 1 pair with 2 antennas chosen by amplitude variance",
+             "All 6 receivers (link mixing) and all 6 antenna-pair CSI ratios", "1 link (ESP8266 to Raspberry Pi 4B, 2.4 GHz)",
+             "1 link: receiver r1, antennas 1 and 2 (one CSI ratio)"],
+            ["Links in testing", "Same as training", "1 to 6 links, predictions fused", "1 link", "1 link"],
+            ["Input", "CSI-ratio phase and DFS rendered as images", "CSI-ratio amplitude and phase", "CSI amplitude, Hampel, dB, 52 x 52 segments",
+             "CSI-ratio phase derivative and band-passed PCA Doppler map, 64 x 128"],
+            ["Model", "ImageNet-pretrained ResNet18, latent-domain mining, adversarial alignment", "AlexNet-style CNN (1.21 GFLOPs per sample)",
+             "Dual-axis Transformer + GNN, centre loss", f"Two-branch CNN, {S['n_params'].get('C5', 0):,} parameters, prototype classifier"],
+            ["Cross-orientation protocol", "Leave one orientation out: train on 4, test on 1", "Leave one orientation out: train on 4, test on 1",
+             "Not evaluated (cross-user and cross-day)", "Train on 3, validate on 1, test on 1 (tasks O1, O3, O5)"],
+            ["Model selection", "No validation domain described", "Training until convergence; no validation domain described",
+             "Early stopping on validation loss", "Best source-validation macro-F1; no target data"],
+            ["Reporting", "One accuracy per setting", "One accuracy per setting", "Mean and SD over 3 seeds for cross-domain",
+             "Mean and SD over 3 seeds, macro-F1, per-class F1, participant bootstrap"],
+        ], columns=["Aspect", "GesFi [1]", "WiZeCSi [2]", "Koo and Park [3]", "This work"])
+        self.table(bp, "Settings of the three base papers and of this work (from the papers' method and experiment sections).",
+                   font=8, widths=[2.4, 3.7, 3.5, 3.3, 3.7])
+
+        self.h("5.2 Reported results next to the measured ones", 2)
+        per = S["per_task"]
+        c1_tasks = ", ".join(f"{t} {per['C1'][t]['target_accuracy'] * 100:.1f}%" for t in per.get("C1", {}))
+        res = pd.DataFrame([
+            ["GesFi [1], Table 2", "6 Tx-Rx pairs, train on 4 orientations", "99.73", "96.45", "Cross-location 99.26, cross-environment 99.32"],
+            ["GesFi [1], Table 3", "1 Tx-Rx pair, train on 4 orientations", "97.29", "86.66", "Cross-location 95.01"],
+            ["GesFi [1], Table 7", "Train on 1 / 2 / 3 orientations", "-", "66.35 / 82.46 / 92.60", "Data-diversity study"],
+            ["WiSR [5], in [1] Table 3", "1 Tx-Rx pair", "-", "88.80", "Cross-location 77.51 (secondary citation)"],
+            ["WiZeCSi [2], Tables 3 and 6", "Trained on 6 receivers, tested on 1 link", "98.32", "96.57 (per orientation 94.06-97.98)",
+             "Cross-location 97.58, cross-room-user 96.86"],
+            ["WiZeCSi [2], Table 8", "1 link, without multi-ratio augmentation and link mixing", "88.39", "-", "Cross-room-user 76.67"],
+            ["Koo and Park [3], Fig. 6-7", "1 link, own 4-class dataset", "99.31", "n/a", "Cross-user 54.43, cross-day 56.61"],
+            ["This work, C1 (matched baseline)", "1 link, train on 3 orientations", f"{c1id:.2f}", f"{c1a:.2f} ({c1_tasks})", f"Macro-F1 {c1f:.2f}"],
+            ["This work, C5 (proposed)", "1 link, train on 3 orientations", f"{c5id:.2f}", f"{c5a:.2f}", f"Macro-F1 {c5f:.2f}"],
+        ], columns=["Source", "Setting", "In-domain acc. (%)", "Cross-orientation acc. (%)", "Other"])
+        self.table(res, "Accuracy reported by the base papers (as published) and measured in this work (mean over tasks and seeds).",
+                   font=8, widths=[3.4, 4.0, 1.9, 3.6, 3.7])
+
+        self.h("5.3 Findings from the comparison", 2)
+        lo2 = lambda cfg: sorted(((float(v.split(" ")[0]), k) for k, v in pc_all[pc_all.Config == cfg].iloc[0].items() if k != "Config"))[:2]
+        pc_all = self.csv("T9_per_class_f1")
+        weak = lo2("C1") if pc_all is not None and "C1" in set(pc_all.Config) else []
+        weak_txt = " and ".join(f"{k} ({v:.1f}%)" for v, k in weak)
+        b1a, b3a = self.core("B1", "target_accuracy"), self.core("B3", "target_accuracy")
+        self.bullets([
+            "Comparability. None of the base papers uses our protocol. GesFi and WiZeCSi train on four orientations, while this study trains on three "
+            "and keeps one for validation; GesFi's own data-diversity study shows that the number of training orientations alone moves "
+            "cross-orientation accuracy from 66.35% to 92.60%. Both also use far larger models (ResNet18 pretrained on ImageNet, an AlexNet-style "
+            "CNN) and describe no validation domain, and WiZeCSi trains on all six receivers before testing on one. Koo and Park use a different "
+            "task and dataset. The accuracy gap to the Widar3.0 base papers therefore cannot be attributed to the method alone.",
+            f"Single-link training is hard in every study. Koo and Park report about 55% cross-domain accuracy for a strictly single-link system "
+            f"despite 99.31% in-domain, and WiZeCSi's ablation drops to 88.39% in-domain and 76.67% cross-room-user once training is restricted "
+            f"to one link and one CSI ratio. Our strictly single-link results ({c1id:.2f}% in-domain, {c1a:.2f}% unseen-orientation for C1) "
+            f"lie in the same regime: a large in-domain to cross-domain gap, which Koo and Park name as the main limitation of their system.",
+            f"Hardest orientations agree. GesFi (Fig. 7b) and WiZeCSi (Table 3) find orientations 1 and 5, at the ends of the orientation range, "
+            f"hardest. Our results are consistent with this, although only orientations 1, 3 and 5 are targets here: the interior orientation "
+            f"is the easiest for the matched baseline ({c1_tasks}).",
+            f"Hardest gestures agree. WiZeCSi reports slide as its least accurate gesture, confused with sweep or clap. Our two weakest C1 classes "
+            f"are {weak_txt}, which supports the choice of clap/slide confusion as the target error of this study.",
+            f"Alignment by physical labels. GesFi argues that adversarial alignment on physical domain labels conflicts with classification. In "
+            f"our runs, DANN with orientation labels reaches {b3a:.2f}% against {b1a:.2f}% for plain ERM, and the class-consistency loss, which also "
+            "aligns per-orientation class centres, gives no measurable gain. This is consistent with GesFi's argument, although our experiments do "
+            "not test it directly.",
+            "Preprocessing is decisive. GesFi high-pass filters the CSI ratio, Koo and Park lose about 5 points of cross-user accuracy without dB "
+            f"conversion, and our diagnostic gate moved held-out accuracy from {p2_acc:.1f}% to {gate_acc:.1f}% by changing the Hampel placement "
+            "and the phase and Doppler definitions.",
+            "Directions that respect the single-link constraint. WiZeCSi's multi-ratio augmentation uses the other antenna pairs of the same "
+            "receiver, so it stays within one link and is directly applicable here (we use one of the six possible ratios). Koo and Park's "
+            "multi-domain segment batches and centre loss are close in spirit to our episodic multi-orientation sampling and class-consistency "
+            "term, and GesFi's latent domains could replace orientation labels in that term.",
+        ])
+        self.h("5.4 Wider literature context", 2)
+        self.p("The following table adds other published Widar3.0 results. GLSDA's CSI-ratio branch [6] is the closest of these to a single receiver, but it "
+               "uses a different split and a large-model semantic teacher; Wi-CBR [7] uses multiple receivers, and Wi-SFDAGR [8] adapts on "
+               "unlabelled target data, which strict domain generalization does not allow.")
         self.table(self.csv("T6_literature_context"), "Literature context (published values as reported by the papers; fairness limits per row).",
-                   font=7, widths=[3.0, 2.4, 2.6, 1.8, 1.7, 2.0, 1.5, 4.2])
+                   font=7.5, widths=[3.0, 2.4, 2.6, 1.8, 1.6, 1.9, 1.5, 4.2])
 
         # ---------------- 6 ablation
         self.h("6. Ablation studies", 1)
@@ -367,7 +558,17 @@ class Report:
             "Model capacity: the encoder is deliberately small (under 100k parameters) and ends in global average pooling, which may weaken the use of "
             "where Doppler energy lies on the frequency axis; whether this limits the in-domain ceiling is untested and left for future work.",
             "The C1 − C0 contrast changes capacity as well as the input, so it is supporting evidence about the Doppler branch, not a pure causal test.",
+            "Protocol: three training orientations and three target orientations (O1, O3, O5); the base papers [1], [2] train on four and test "
+            "on all five, so absolute accuracies are not comparable with theirs.",
             "The planned room/user extension task was not run in this phase.",
+        ])
+        self.h("7.5 Future work", 2)
+        self.bullets([
+            "Run a protocol matched to [1] and [2] (train on four orientations, test on each of the five, single link) to obtain directly comparable "
+            "numbers, and run the public GesFi code under our strict source-validation protocol.",
+            "Add multi-ratio augmentation [2] within receiver r1, which keeps the single-link constraint, and test a larger or pretrained encoder "
+            "to raise the in-domain ceiling.",
+            "Replace orientation labels in the class-consistency term with data-driven latent domains [1].",
         ])
 
         # ---------------- 8 reproducibility
@@ -382,6 +583,14 @@ class Report:
         if n_missing:
             self.p(f"Runs not completed ({n_missing}): " + "; ".join("/".join(m) for m in S["missing"]) + ".")
 
+        # ---------------- references
+        self.h("References", 1)
+        for i, r in enumerate(REFS, 1):
+            para = self.p(f"[{i}] {r}", size=10, justify=False)
+            para.paragraph_format.left_indent = Cm(0.8)
+            para.paragraph_format.first_line_indent = Cm(-0.8)
+            para.paragraph_format.space_after = Pt(2)
+
         # ---------------- appendix
         self.h("Appendix", 1)
         self.p("Supporting tables and figures referred to in the main text.", italic=True)
@@ -391,6 +600,7 @@ class Report:
         self.table(self.csv("T8_clap_slide"), "Directional clap/slide errors with denominators (seeds pooled).", font=7)
 
     def save(self, out: Path):
+        self.finalize()
         out.parent.mkdir(parents=True, exist_ok=True)
         self.doc.save(str(out))
         print(f"[report] {out} ({self.ntab} tables, {self.nfig} figures)")
@@ -403,7 +613,7 @@ def main():
     ap.add_argument("--results", default="results/final")
     ap.add_argument("--cache", default="cache")
     ap.add_argument("--diag", default="docs/diagnostics")
-    ap.add_argument("--out", default="docs/Phase3_Report_23I-2621_23I-2508.docx")
+    ap.add_argument("--out", default="docs/Phase3_Report_23I-2508_23I-2621.docx")
     a = ap.parse_args()
     r = Report(Path(a.results), Path(a.cache), Path(a.diag))
     r.build()
