@@ -1,0 +1,4 @@
+Task,Train orientations,Source-val orientation,Target orientation,Train,In-domain test,Source val,Target,Unassigned (excluded)
+O1,"3, 4, 5",2,1,3238,810,1350,1349,3
+O3,"1, 2, 5",4,3,3238,810,1349,1350,3
+O5,"2, 3, 4",1,5,3239,810,1349,1349,3

@@ -36,6 +36,7 @@ class Report:
             s.left_margin = s.right_margin = Cm(1.9)
             s.top_margin = s.bottom_margin = Cm(1.8)
         self.nfig = self.ntab = 0
+        self.deferred = []          # items moved to the appendix to keep the main body short
 
     # ---- primitives
     def h(self, text, level=1):
@@ -58,8 +59,11 @@ class Report:
         f = self.res / "tables" / f"{name}.csv"
         return pd.read_csv(f, keep_default_na=False) if f.exists() else None
 
-    def table(self, df, caption, font=7.5, widths=None):
+    def table(self, df, caption, font=7.5, widths=None, appendix=False):
         if df is None or len(df) == 0:
+            return
+        if appendix:
+            self.deferred.append(lambda: self.table(df, caption, font, widths))
             return
         self.ntab += 1
         cap = self.p(f"Table {self.ntab}. {caption}", bold=True, size=8.5)
@@ -83,17 +87,20 @@ class Report:
                     row.cells[j].width = Cm(w)
         self.doc.add_paragraph().paragraph_format.space_after = Pt(2)
 
-    def figure(self, path, caption, width=17.0):
+    def figure(self, path, caption, width=17.0, appendix=False):
         path = Path(path)
         if not path.exists():
+            return
+        if appendix:
+            self.deferred.append(lambda: self.figure(path, caption, width))
             return
         self.nfig += 1
         self.doc.add_picture(str(path), width=Cm(width))
         self.doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
         self.p(f"Figure {self.nfig}. {caption}", italic=True, size=8.5).alignment = WD_ALIGN_PARAGRAPH.CENTER
 
-    def fig(self, name, caption, width=17.0):
-        self.figure(self.res / "figures" / f"{name}.png", caption, width)
+    def fig(self, name, caption, width=17.0, appendix=False):
+        self.figure(self.res / "figures" / f"{name}.png", caption, width, appendix)
 
     # ---- numbers
     def core(self, cfg, key, scale=100.0):
@@ -237,7 +244,7 @@ class Report:
         self.table(gt[gt.Input.str.contains(r"\+")], "Diagnostic gate, fused two-branch fits (all single-channel fits are in the appendix).", font=7.5)
         self.fig("F0_preprocessing_gate", "Diagnostic gate: held-out (bar) and train (circle) accuracy of every preprocessing variant.", 15.5)
         self.figure(self.diag / "maps_before_after.png", "One training trial per gesture: Phase-2 map definitions next to the locked maps.", 16.5)
-        self.fig("F1_example_maps", "Locked phase and Doppler maps from the final cache, one training trial per gesture.", 17)
+        self.fig("F1_example_maps", "Locked phase and Doppler maps from the final cache, one training trial per gesture.", 17, appendix=True)
 
         # ---------------- 3 baselines + results
         self.h("3. Baseline evaluation and main results", 1)
@@ -255,7 +262,7 @@ class Report:
             bf, ba = self.core(best, "target_macro_f1"), self.core(best, "target_accuracy")
             self.p(f"The best external baseline by mean source-validation macro-F1 (target data not used for this choice) is {best}: "
                    f"{ba:.2f}% target accuracy and {bf:.2f}% macro-F1, against {c5a:.2f}% and {c5f:.2f}% for C5 and {c1a:.2f}% and {c1f:.2f}% for C1.")
-            self.table(self.csv("T2b_best_baseline_selection"), "Selection of the best external baseline on source validation.", font=8)
+            self.table(self.csv("T2b_best_baseline_selection"), "Selection of the best external baseline on source validation.", font=8, appendix=True)
         self.table(self.csv("T5_cost"), "Computational cost per configuration (same device and software for all runs).", font=7.5)
 
         # ---------------- 4 figures
@@ -265,16 +272,16 @@ class Report:
         self.fig("F5_clap_slide_error", "Clap/slide pair error per configuration and task (lower is better).")
         self.fig("F6_generalization_gap", "In-domain versus target macro-F1 per configuration.", 12)
         self.fig("F7_per_class_f1", "Per-class target F1 per configuration.", 12)
-        self.fig("F9_training_curves", "Training loss, clean train accuracy and source-validation macro-F1.")
+        self.fig("F9_training_curves", "Training loss, clean train accuracy and source-validation macro-F1.", appendix=True)
         if main is not None:
-            self.table(main[main.Task != "Core mean"], "Results per task (mean ± sample SD over seeds).", font=7)
+            self.table(main[main.Task != "Core mean"], "Results per task (mean ± sample SD over seeds).", font=7, appendix=True)
 
         # ---------------- 5 literature
         self.h("5. Comparison with existing research", 1)
         self.p("The table places the measured single-link results next to numbers reported by related papers on Widar3.0. The protocols differ in "
                "the number of receivers, the input representation, the split, the model size and whether target data are used, so the published rows "
                "are context and are not ranked against ours. The closest setting is GLSDA's CSI-ratio branch at one receiver location, which still "
-               "uses a different split (train on one location/orientation, test on the others) and a far larger model.")
+               "uses a different split (train on one location/orientation, test on the others) and a large-model semantic teacher.")
         self.table(self.csv("T6_literature_context"), "Literature context (published values as reported by the papers; fairness limits per row).",
                    font=7, widths=[3.0, 2.4, 2.6, 1.8, 1.7, 2.0, 1.5, 4.2])
 
@@ -291,9 +298,9 @@ class Report:
             self.delta_sentence("C5-C4", "macro_f1", "Schedule versus fixed level (C5 − C4), macro-F1"),
             self.delta_sentence("C1-C0", "macro_f1", "Doppler branch (C1 − C0; capacity also doubles), macro-F1"),
         ])
-        self.table(self.csv("T3_ablation"), "Paired ablation deltas per task and for the core mean (mean ± SD over seeds).", font=7)
+        self.table(self.csv("T3_ablation"), "Paired ablation deltas per task and for the core mean (mean ± SD over seeds).", font=7, appendix=True)
         self.fig("F3_ablation_deltas", "Ablation deltas: core mean with SD over seeds (bars) and individual tasks (circles).", 15.5)
-        self.table(self.csv("T4_bootstrap"), "Paired user-cluster bootstrap; 95% intervals are exploratory.", font=6.5)
+        self.table(self.csv("T4_bootstrap"), "Paired user-cluster bootstrap for every contrast and task; 95% intervals are exploratory.", font=6.5, appendix=True)
         lam = self.csv("T7_lambda_sensitivity")
         if lam is not None and len(lam):
             self.table(lam, "Sensitivity of C5 to the consistency weight (seed 42).", font=8)
@@ -318,6 +325,18 @@ class Report:
             self.bullets([f"Task {t}: C1 {per['C1'][t]['target_macro_f1'] * 100:.2f}% and C5 {per['C5'][t]['target_macro_f1'] * 100:.2f}% target macro-F1; "
                           f"clap/slide error {per['C1'][t]['target_clap_slide_error'] * 100:.2f}% and {per['C5'][t]['target_clap_slide_error'] * 100:.2f}%."
                           for t in per["C5"] if t in per["C1"]])
+        pc, cs = self.csv("T9_per_class_f1"), self.csv("T8_clap_slide")
+        if pc is not None and cs is not None and {"C1", "C5"} <= set(pc.Config):
+            f = lambda cfg, g: pc[pc.Config == cfg][g].iloc[0]
+            rows = cs[cs.Config.isin(["C1", "C5"])]
+            self.p("The pair metric needs care. It counts only clap-to-slide and slide-to-clap errors, so it falls whenever slide or clap "
+                   "trials are misread as a third gesture instead. Per-class F1 (core mean, %): clap "
+                   f"{f('C1', 'Clap')} for C1 and {f('C5', 'Clap')} for C5; slide {f('C1', 'Slide')} for C1 and {f('C5', 'Slide')} for C5. "
+                   "Directional counts per task are: " + "; ".join(
+                       f"{r.Task} {r.Config}: clap→slide {r['Clap→slide / actual clap']}, slide→clap {r['Slide→clap / actual slide']}"
+                       for _, r in rows.iterrows()) + ". "
+                   "The confusion matrices (Figure 4 in Section 4) show where the remaining slide errors go. A lower pair error is therefore evidence "
+                   "of less clap/slide mixing, not by itself of better recognition of either gesture.")
         if best:
             self.p("Against the best external baseline (" + best + "): " + self.delta_sentence(f"C5-{best}", "macro_f1", "macro-F1 (C5 − " + best + ")")
                    + " " + self.delta_sentence(f"C5-{best}", "clap_slide_error", "Clap/slide error", higher_is_better=False))
@@ -326,16 +345,16 @@ class Report:
         self.p(f"The in-domain minus target macro-F1 gap is {g1:+.2f} pp for C1 and {g5:+.2f} pp for C5. In-domain accuracy "
                f"({c1id:.2f}% for C1, {c5id:.2f}% for C5) is the ceiling that this compact single-link model reaches on orientations it has seen, "
                f"and clean training accuracy at the selected checkpoint is {self.core('C1', 'train_acc_best'):.2f}% (C1) and {self.core('C5', 'train_acc_best'):.2f}% (C5). "
-               "Target results must be read against that ceiling: the published single-receiver numbers in Section 5 come from much larger models and "
-               "different splits, and the diagnostic gate shows how strongly accuracy depends on the map definitions and on the amount of optimisation.")
+               "Target results must be read against that ceiling: the published numbers in Section 5 come from different models, inputs and "
+               "splits, and the diagnostic gate shows how strongly accuracy depends on the map definitions and on the amount of optimisation.")
         self.h("7.3 Error and failure analysis", 2)
-        self.p(f"The lowest C5 macro-F1 is on task {S['worst_c5_task']}. The tables list per-class F1, per-participant accuracy and the most confident C5 errors "
+        self.p(f"The lowest C5 macro-F1 is on task {S['worst_c5_task']}. The table below lists per-class F1; the appendix lists per-participant accuracy, a t-SNE view and the most confident C5 errors "
                "on that task with the C1 prediction for the same trial; softmax confidence is not a calibrated probability, and an association between "
                "duration or packet gaps and an error does not establish its cause. The t-SNE plot is a diagnostic view only.")
         self.table(self.csv("T9_per_class_f1"), "Per-class target F1 (%), core mean.", font=7.5)
-        self.table(self.csv("T11_per_user_accuracy"), "Target accuracy (%) per participant.", font=8)
-        self.table(self.csv("T10_failure_cases"), "Most confident C5 errors on its worst task.", font=7)
-        self.fig("F8_tsne_C1_vs_C5", "t-SNE of frozen target embeddings, C1 and C5 (diagnostic only).", 16)
+        self.table(self.csv("T11_per_user_accuracy"), "Target accuracy (%) per participant.", font=8, appendix=True)
+        self.table(self.csv("T10_failure_cases"), "Most confident C5 errors on its worst task.", font=7, appendix=True)
+        self.fig("F8_tsne_C1_vs_C5", "t-SNE of frozen target embeddings, C1 and C5 (diagnostic only).", 16, appendix=True)
         self.h("7.4 Strengths and limitations", 2)
         self.bullets([
             "Strengths: strict source-only protocol with saved splits and leakage assertions; one receiver and two antennas only; matched ablation arms that "
@@ -345,8 +364,8 @@ class Report:
             "Statistics: three seeds and nine participants; bootstrap intervals are exploratory. Seeds and trials are not independent domain replications.",
             "Preprocessing selection used held-out source trials from orientations 2 and 4. These are never target domains, but the selected pipeline was "
             "therefore tuned on data that later serve as source training or source validation.",
-            "Model capacity: the encoder is deliberately small and ends in global average pooling, which discards where on the Doppler axis energy lies; "
-            "this limits the in-domain ceiling and is a candidate for future work.",
+            "Model capacity: the encoder is deliberately small (under 100k parameters) and ends in global average pooling, which may weaken the use of "
+            "where Doppler energy lies on the frequency axis; whether this limits the in-domain ceiling is untested and left for future work.",
             "The C1 − C0 contrast changes capacity as well as the input, so it is supporting evidence about the Doppler branch, not a pure causal test.",
             "The planned room/user extension task was not run in this phase.",
         ])
@@ -365,8 +384,11 @@ class Report:
 
         # ---------------- appendix
         self.h("Appendix", 1)
-        self.table(gt, "A1. Diagnostic gate, all fits.", font=7)
-        self.table(self.csv("T8_clap_slide"), "A2. Directional clap/slide errors with denominators (seeds pooled).", font=7)
+        self.p("Supporting tables and figures referred to in the main text.", italic=True)
+        for item in self.deferred:
+            item()
+        self.table(gt, "Diagnostic gate, all fits.", font=7)
+        self.table(self.csv("T8_clap_slide"), "Directional clap/slide errors with denominators (seeds pooled).", font=7)
 
     def save(self, out: Path):
         out.parent.mkdir(parents=True, exist_ok=True)

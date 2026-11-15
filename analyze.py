@@ -40,7 +40,7 @@ LITERATURE = [
          fairness="Six synchronised receivers and body-velocity profiles; not single-link."),
     dict(system="GLSDA baseline (ICPADS'25, Table II)", receivers="1 receiver location", input="CSI-ratio branch",
          target_data="none", in_domain="95.56", cross_orientation="89.92",
-         fairness="Trains on one location/orientation and tests on the others; different split and model size."),
+         fairness="Trains on one location/orientation and tests on the others; different split and model."),
     dict(system="GLSDA (ICPADS'25, Table II)", receivers="1 receiver location", input="CSI-ratio branch",
          target_data="none", in_domain="97.78", cross_orientation="92.80",
          fairness="As above, plus a large-model semantic teacher."),

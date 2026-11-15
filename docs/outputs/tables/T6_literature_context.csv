@@ -1,0 +1,8 @@
+System,Receivers,Input,Target data used,In-domain acc (%),Cross-orientation acc (%),Source,Fairness note
+Widar3.0 (MobiSys'19),6 receivers,BVP (multi-link),none,92.7,82.6-92.4 (cross-domain range),reported by the paper,Six synchronised receivers and body-velocity profiles; not single-link.
+"GLSDA baseline (ICPADS'25, Table II)",1 receiver location,CSI-ratio branch,none,95.56,89.92,reported by the paper,Trains on one location/orientation and tests on the others; different split and model.
+"GLSDA (ICPADS'25, Table II)",1 receiver location,CSI-ratio branch,none,97.78,92.80,reported by the paper,"As above, plus a large-model semantic teacher."
+Wi-CBR (AAAI'26),multi-receiver Widar features,phase + Doppler images,none,-,96.30,reported by the paper,Published Widar pipeline uses multiple receiver inputs; ResNet-18 backbone.
+Wi-SFDAGR (IEEE IoT-J'25),multi-device input,CSI-ratio phase heatmaps,unlabelled target data,-,97.17,reported by the paper,Source-free adaptation on unlabelled target samples; not strict domain generalization.
+"This work, C1","1 receiver (r1), 2 antennas",CSI-ratio phase + Doppler (same link),none (strict DG),79.81 ± 1.74,61.54 ± 1.47,measured here,"47,042 parameters; leave-one-orientation-out over 9 users; trained on 3 orientations; mean ± SD over seeds of the 3-task mean."
+"This work, C5","1 receiver (r1), 2 antennas",CSI-ratio phase + Doppler (same link),none (strict DG),80.74 ± 2.10,60.42 ± 0.68,measured here,"47,042 parameters; leave-one-orientation-out over 9 users; trained on 3 orientations; mean ± SD over seeds of the 3-task mean."

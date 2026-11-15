@@ -1,0 +1,5 @@
+config,mean_source_val_macro_f1,runs
+B1,0.6905,9
+B2,0.6774,9
+B3,0.6835,9
+B4,0.6718,9

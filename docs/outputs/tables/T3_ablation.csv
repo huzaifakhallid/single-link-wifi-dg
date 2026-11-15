@@ -1,0 +1,26 @@
+Contrast,Tests,Task,Paired seeds,Δ accuracy (pp),Δ macro-F1 (pp),Δ clap↔slide error (pp)
+C5 − C1,full method vs matched fused baseline,O1,3,-2.17 ± 3.32,-2.08 ± 4.36,-5.26 ± 2.01
+C5 − C1,full method vs matched fused baseline,O3,3,-1.68 ± 0.91,-1.96 ± 0.58,-1.19 ± 0.93
+C5 − C1,full method vs matched fused baseline,O5,3,0.47 ± 3.07,1.86 ± 4.49,0.96 ± 3.03
+C5 − C1,full method vs matched fused baseline,Core mean,3,-1.13 ± 1.54,-0.73 ± 1.97,-1.83 ± 0.99
+C5 − C2,class consistency (curriculum held fixed),O1,3,-1.66 ± 5.16,-1.35 ± 5.73,-1.41 ± 3.23
+C5 − C2,class consistency (curriculum held fixed),O3,3,-0.49 ± 0.49,-0.47 ± 0.69,-0.15 ± 1.61
+C5 − C2,class consistency (curriculum held fixed),O5,3,-0.99 ± 2.76,0.06 ± 3.01,-0.37 ± 2.96
+C5 − C2,class consistency (curriculum held fixed),Core mean,3,-1.05 ± 0.84,-0.59 ± 0.98,-0.64 ± 0.87
+C5 − C3,curriculum (consistency held fixed),O1,3,-1.36 ± 2.10,-1.40 ± 2.90,-4.00 ± 7.74
+C5 − C3,curriculum (consistency held fixed),O3,3,0.07 ± 2.86,-0.03 ± 2.61,-1.48 ± 0.68
+C5 − C3,curriculum (consistency held fixed),O5,3,0.35 ± 2.41,1.41 ± 3.75,-0.37 ± 1.36
+C5 − C3,curriculum (consistency held fixed),Core mean,3,-0.31 ± 2.01,-0.00 ± 2.44,-1.95 ± 2.27
+C5 − C4,curriculum schedule vs fixed-level control,O1,3,0.82 ± 3.19,1.40 ± 4.81,-6.29 ± 7.60
+C5 − C4,curriculum schedule vs fixed-level control,O3,3,-1.93 ± 2.02,-2.29 ± 1.75,-0.30 ± 4.75
+C5 − C4,curriculum schedule vs fixed-level control,O5,3,0.64 ± 3.51,1.05 ± 2.56,-1.48 ± 1.26
+C5 − C4,curriculum schedule vs fixed-level control,Core mean,3,-0.16 ± 0.49,0.05 ± 0.80,-2.69 ± 3.72
+C1 − C0,Doppler branch (capacity also changes),O1,3,-1.85 ± 1.09,-2.54 ± 1.01,-1.25 ± 2.27
+C1 − C0,Doppler branch (capacity also changes),O3,3,7.78 ± 0.91,10.26 ± 0.68,-1.85 ± 1.36
+C1 − C0,Doppler branch (capacity also changes),O5,3,1.24 ± 2.95,1.09 ± 4.37,2.00 ± 2.50
+C1 − C0,Doppler branch (capacity also changes),Core mean,3,2.39 ± 0.82,2.94 ± 1.31,-0.37 ± 1.77
+C5 − B1,"full method vs best external baseline (B1, chosen by source-validation macro-F1)",O1,3,-0.57 ± 1.22,-0.85 ± 2.50,-0.82 ± 2.90
+C5 − B1,"full method vs best external baseline (B1, chosen by source-validation macro-F1)",O3,3,-0.37 ± 3.63,-0.47 ± 4.29,-1.70 ± 5.55
+C5 − B1,"full method vs best external baseline (B1, chosen by source-validation macro-F1)",O5,3,1.04 ± 6.36,1.00 ± 5.69,0.81 ± 2.89
+C5 − B1,"full method vs best external baseline (B1, chosen by source-validation macro-F1)",Core mean,3,0.03 ± 3.25,-0.11 ± 3.71,-0.57 ± 2.30
+C5 − C4 (epoch 30),"schedule, equal augmentation exposure",Core mean,3,-0.83 ± 1.01,-1.17 ± 0.90,0.22 ± 0.32

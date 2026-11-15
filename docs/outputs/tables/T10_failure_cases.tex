@@ -1,0 +1,22 @@
+\begin{table}[t]
+\centering
+\small
+\caption{Ten most confident C5 errors on the worst C5 task (O1, seed 42), with the C1 prediction on the same trial. Softmax confidence is not a calibrated probability.}
+\label{tab:T10_failure_cases}
+\begin{tabular}{llllllllll}
+\hline
+Trial & Actual & C5 prediction & C5 confidence & C1 prediction & C1 confidence & user & location & duration\_s & max\_gap\_ms \\
+\hline
+user12-4-2-1-3-r1 & Slide & Clap & 0.9860000014305115 & Clap & 0.9779999852180481 & 12 & 2 & 1.428 & 3.4 \\
+user15-2-4-1-1-r1 & Sweep & Clap & 0.9549999833106995 & Clap & 0.6179999709129333 & 15 & 4 & 1.236 & 4.1 \\
+user14-5-4-1-3-r1 & Draw-O(H) & Sweep & 0.9549999833106995 & Sweep & 0.8539999723434448 & 14 & 4 & 2.18 & 7.4 \\
+user17-4-4-1-1-r1 & Slide & Sweep & 0.949999988079071 & Sweep & 0.5139999985694885 & 17 & 4 & 2.028 & 9.6 \\
+user16-4-2-1-5-r1 & Slide & Clap & 0.9390000104904175 & Clap & 0.878000020980835 & 16 & 2 & 1.684 & 4.2 \\
+user14-5-4-1-4-r1 & Draw-O(H) & Sweep & 0.9319999814033508 & Sweep & 0.9169999957084656 & 14 & 4 & 2.263 & 5.9 \\
+user10-4-2-1-2-r1 & Slide & Clap & 0.9309999942779541 & Push\&Pull & 0.5490000247955322 & 10 & 2 & 1.82 & 7.3 \\
+user16-5-1-1-4-r1 & Draw-O(H) & Push\&Pull & 0.9300000071525574 & Push\&Pull & 0.7649999856948853 & 16 & 1 & 1.595 & 5.8 \\
+user5-4-5-1-3-r1 & Slide & Clap & 0.9300000071525574 & Clap & 0.9929999709129333 & 5 & 5 & 1.332 & 4.2 \\
+user14-5-4-1-1-r1 & Draw-O(H) & Draw-Zigzag(H) & 0.9300000071525574 & Draw-Zigzag(H) & 0.8519999980926514 & 14 & 4 & 1.763 & 4.4 \\
+\hline
+\end{tabular}
+\end{table}

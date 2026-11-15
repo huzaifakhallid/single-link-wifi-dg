@@ -1,0 +1,23 @@
+Hampel placement,Input channel(s),Head scale,Epochs,Optimizer steps,Train acc (%),Held-out acc (%),Train / held-out trials
+ratio,phase:diff + doppler:bp_pca_log1p,10.0,45,1485,86.34,80.93,2159 / 540
+ratio,phase:diff,10.0,15,495,67.48,67.96,2159 / 540
+ratio,doppler:bp_pca_log1p,10.0,15,495,66.0,65.56,2159 / 540
+ratio,doppler:bp_pca_db,10.0,15,495,63.73,63.89,2159 / 540
+ratio,doppler:bp_avg_db,10.0,15,495,62.58,60.37,2159 / 540
+ratio,doppler:mean_avg_db,10.0,15,495,62.44,59.26,2159 / 540
+ratio,doppler:bp_avg_log1p,10.0,15,495,62.81,58.7,2159 / 540
+ratio,doppler:mean_avg_log1p,10.0,15,495,52.62,52.41,2159 / 540
+ratio,phase:unwrap_hp,10.0,15,495,52.52,51.11,2159 / 540
+ratio,phase:rel,10.0,15,495,51.32,46.67,2159 / 540
+ratio,phase:unwrap,10.0,15,495,51.78,46.67,2159 / 540
+antenna_complex,doppler:bp_pca_db,10.0,15,495,47.01,46.48,2159 / 540
+antenna_complex,doppler:bp_avg_db,10.0,15,495,39.42,41.85,2159 / 540
+antenna_complex,doppler:bp_pca_log1p,10.0,15,495,43.4,40.0,2159 / 540
+antenna_complex,phase:unwrap + doppler:mean_avg_log1p,10.0,45,1485,47.38,38.89,2159 / 540
+antenna_complex,doppler:bp_avg_log1p,10.0,15,495,39.93,38.33,2159 / 540
+antenna_complex,phase:diff,10.0,15,495,37.1,35.93,2159 / 540
+antenna_complex,doppler:mean_avg_db,10.0,15,495,35.62,32.22,2159 / 540
+antenna_complex,phase:unwrap_hp,10.0,15,495,32.52,31.85,2159 / 540
+antenna_complex,phase:unwrap,10.0,15,495,26.73,24.44,2159 / 540
+antenna_complex,doppler:mean_avg_log1p,10.0,15,495,28.35,23.7,2159 / 540
+antenna_complex,phase:rel,10.0,15,495,28.11,23.15,2159 / 540

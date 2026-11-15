@@ -15,3 +15,5 @@ __pycache__/
 #AI files
 *.ckpt
 decisions.md
+# exported result archives
+single_link_dg_results*.zip

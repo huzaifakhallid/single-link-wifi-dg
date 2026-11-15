@@ -1,0 +1,22 @@
+\begin{table}[t]
+\centering
+\small
+\caption{Computational cost. Latency is the frozen model only (embedding + classifier); feature extraction (decode + maps) took a median of 214 ms per trial on one CPU core.}
+\label{tab:T5_cost}
+\begin{tabular}{llllllll}
+\hline
+Config & Runs & Trainable params & Train time per run (min) & Peak GPU memory (MB) & Batch-1 latency median (ms) & Batch-1 latency p95 (ms) & Device \\
+\hline
+C0 & 9 & 23520 & 1.25 $\pm$ 0.03 & 631 & 1.84 & 4.02 & Tesla T4 \\
+C1 & 9 & 47042 & 2.22 $\pm$ 0.04 & 886 & 2.93 & 6.87 & Tesla T4 \\
+C2 & 9 & 47042 & 2.88 $\pm$ 0.03 & 631 & 3.23 & 6.09 & Tesla T4 \\
+C3 & 9 & 47042 & 2.31 $\pm$ 0.04 & 631 & 3.05 & 5.03 & Tesla T4 \\
+C4 & 9 & 47042 & 2.95 $\pm$ 0.07 & 631 & 3.17 & 5.07 & Tesla T4 \\
+C5 & 9 & 47042 & 2.97 $\pm$ 0.04 & 631 & 4.08 & 7.22 & Tesla T4 \\
+B1 & 9 & 47432 & 1.86 $\pm$ 0.10 & 634 & 2.82 & 3.86 & Tesla T4 \\
+B2 & 9 & 47432 & 2.16 $\pm$ 0.09 & 634 & 4.30 & 7.93 & Tesla T4 \\
+B3 & 9 & 47432 & 1.91 $\pm$ 0.08 & 634 & 2.84 & 5.78 & Tesla T4 \\
+B4 & 9 & 47432 & 1.87 $\pm$ 0.06 & 634 & 2.98 & 5.05 & Tesla T4 \\
+\hline
+\end{tabular}
+\end{table}

@@ -1,0 +1,11 @@
+Trial,Actual,C5 prediction,C5 confidence,C1 prediction,C1 confidence,user,location,duration_s,max_gap_ms
+user12-4-2-1-3-r1,Slide,Clap,0.986,Clap,0.978,12,2,1.428,3.4
+user15-2-4-1-1-r1,Sweep,Clap,0.955,Clap,0.618,15,4,1.236,4.1
+user14-5-4-1-3-r1,Draw-O(H),Sweep,0.955,Sweep,0.854,14,4,2.18,7.4
+user17-4-4-1-1-r1,Slide,Sweep,0.95,Sweep,0.514,17,4,2.028,9.6
+user16-4-2-1-5-r1,Slide,Clap,0.939,Clap,0.878,16,2,1.684,4.2
+user14-5-4-1-4-r1,Draw-O(H),Sweep,0.932,Sweep,0.917,14,4,2.263,5.9
+user10-4-2-1-2-r1,Slide,Clap,0.931,Push&Pull,0.549,10,2,1.82,7.3
+user16-5-1-1-4-r1,Draw-O(H),Push&Pull,0.93,Push&Pull,0.765,16,1,1.595,5.8
+user5-4-5-1-3-r1,Slide,Clap,0.93,Clap,0.993,5,5,1.332,4.2
+user14-5-4-1-1-r1,Draw-O(H),Draw-Zigzag(H),0.93,Draw-Zigzag(H),0.852,14,4,1.763,4.4
