@@ -20,3 +20,12 @@ single_link_dg_results*.zip
 
 # third-party papers (copyright of their publishers)
 base papers/
+
+# paper build artefact
+paper_overleaf.zip
+
+# third-party code fetched at run time (GesFi, GPL-3.0)
+third_party/
+
+# raw API dumps (recreated by survey/search_openalex.py)
+survey/search/*.jsonl

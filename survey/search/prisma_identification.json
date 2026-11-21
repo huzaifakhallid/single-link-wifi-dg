@@ -1,0 +1,13 @@
+{
+  "identified": {
+    "OpenAlex": 240,
+    "IEEE Xplore": 177,
+    "ACM Digital Library (full text, count only)": 630
+  },
+  "records_from_exports": 417,
+  "removed_outside_2021_2026": 9,
+  "duplicates_removed": 110,
+  "records_screened": 298,
+  "found_in_both_OpenAlex_and_IEEE": 108,
+  "acm_published_records_via_openalex": 14
+}

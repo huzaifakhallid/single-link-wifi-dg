@@ -1,0 +1,31 @@
+{
+  "database": "OpenAlex (api.openalex.org)",
+  "run": "2026-11-21 06:23 UTC",
+  "filters": "from_publication_date:2021-01-01,to_publication_date:2026-12-31,type:article|preprint|conference-paper|review",
+  "queries": {
+    "Q_broad": {
+      "string": "(\"WiFi\" OR \"Wi-Fi\" OR \"WLAN\" OR \"channel state information\" OR \"CSI\") AND (\"gesture recognition\" OR \"activity recognition\" OR \"gesture sensing\" OR \"action recognition\" OR \"human sensing\")",
+      "hits": 1381
+    },
+    "Q_domain": {
+      "string": "(\"WiFi\" OR \"Wi-Fi\" OR \"WLAN\" OR \"channel state information\" OR \"CSI\") AND (\"gesture recognition\" OR \"activity recognition\" OR \"gesture sensing\" OR \"action recognition\" OR \"human sensing\") AND (\"cross-domain\" OR \"domain generalization\" OR \"domain generalisation\" OR \"domain adaptation\" OR \"domain-independent\" OR \"domain invariant\" OR \"zero-effort\" OR \"cross-orientation\" OR \"cross-location\" OR \"cross-user\" OR \"few-shot\" OR \"single link\" OR \"single-link\")",
+      "hits": 240
+    }
+  },
+  "manual_searches": {
+    "IEEE Xplore": {
+      "date": "2026-11-21",
+      "file": "ieee_xplore.csv (original export name export2026.11.21-01.39.13.csv)",
+      "hits_exported": 177,
+      "string": "(\"All Metadata\":\"WiFi\" OR \"All Metadata\":\"Wi-Fi\" OR \"All Metadata\":\"channel state information\") AND (\"All Metadata\":\"gesture recognition\" OR \"All Metadata\":\"activity recognition\") AND (\"All Metadata\":\"cross-domain\" OR \"All Metadata\":\"domain generalization\" OR \"All Metadata\":\"domain adaptation\" OR \"All Metadata\":\"single link\" OR \"All Metadata\":\"zero-effort\")",
+      "note": "9 records dated 2018-2020 are excluded at screening by the 2021-2026 criterion"
+    },
+    "ACM Digital Library": {
+      "date": "2026-11-21",
+      "collection": "ACM Full-Text Collection (865,408 records)",
+      "hits": 630,
+      "string": "[[All: \"channel state information\"] OR [All: \"wifi\"] OR [All: \"wi-fi\"]] AND [[All: \"gesture recognition\"] OR [All: \"activity recognition\"]] AND [[All: \"cross-domain\"] OR [All: \"domain generalization\"] OR [All: \"domain adaptation\"] OR [All: \"single link\"] OR [All: \"zero-effort\"]]",
+      "note": "Full-text search, so recall is high and precision low. Bulk export requires a Premium subscription; ACM records are retrieved through OpenAlex instead."
+    }
+  }
+}
